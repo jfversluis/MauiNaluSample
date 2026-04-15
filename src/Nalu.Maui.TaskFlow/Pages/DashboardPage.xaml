@@ -32,7 +32,7 @@
                     <VerticalStackLayout Spacing="8" VerticalOptions="Center">
                         <Label Text="&#xe8f9;" FontFamily="MaterialFilled" FontSize="28" TextColor="White" />
                         <Label Text="{Binding TotalTasks}" FontFamily="OpenSansSemibold" FontSize="36" TextColor="White" />
-                        <Label Text="Total Tasks" FontSize="13" TextColor="#CCFFFFFF" />
+                        <Label Text="Total Tasks  ➜" FontSize="13" TextColor="#CCFFFFFF" />
                     </VerticalStackLayout>
                 </Border>
 

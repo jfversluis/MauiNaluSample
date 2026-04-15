@@ -18,14 +18,18 @@ public class ReplaceableObservableCollection<T> : ObservableCollection<T>
         var innerList = Items;
         innerList.Clear();
         foreach (var item in items)
+        {
             innerList.Add(item);
-        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        }
+
+        // It's fundamental to update count and indexer first, then send the notification changed event args
         OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
         OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
+        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
     }
 }
 
-public partial class TaskListPageModel : ObservableObject, IEnteringAware, IEnteringAware<TaskListFilter>, IAppearingAware
+public partial class TaskListPageModel : ObservableObject, IEnteringAware, IEnteringAware<TaskListFilter>
 {
     private readonly INavigationService _navigationService;
     private readonly TaskService _taskService;
@@ -45,7 +49,7 @@ public partial class TaskListPageModel : ObservableObject, IEnteringAware, IEnte
     {
         _navigationService = navigationService;
         _taskService = taskService;
-        Tasks = new ReplaceableObservableCollection<TaskItem>(taskService.GetFilteredTasks(null));
+        Tasks = new ReplaceableObservableCollection<TaskItem>([]);
         Adapter = VirtualScroll.CreateObservableCollectionAdapter(Tasks);
     }
 
@@ -53,6 +57,7 @@ public partial class TaskListPageModel : ObservableObject, IEnteringAware, IEnte
     {
         _activeFilter = null;
         PageTitle = "All Tasks";
+        LoadTasks();
         return ValueTask.CompletedTask;
     }
 
@@ -67,11 +72,6 @@ public partial class TaskListPageModel : ObservableObject, IEnteringAware, IEnte
             { Priority: TaskPriority.Low } => "🟢 Low Priority",
             _ => "All Tasks"
         };
-        return ValueTask.CompletedTask;
-    }
-
-    public ValueTask OnAppearingAsync()
-    {
         LoadTasks();
         return ValueTask.CompletedTask;
     }
@@ -112,7 +112,11 @@ public partial class TaskListPageModel : ObservableObject, IEnteringAware, IEnte
     {
         task.IsCompleted = !task.IsCompleted;
         _taskService.UpdateTask(task);
-        LoadTasks();
+
+        if (_activeFilter?.OverdueOnly is true)
+        {
+            LoadTasks();
+        }
     }
 
 }
