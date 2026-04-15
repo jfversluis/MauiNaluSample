@@ -31,7 +31,7 @@ Built as a companion app for a video walkthrough of Nalu's capabilities.
 
 ### Prerequisites
 
-- .NET 10 SDK (Preview)
+- .NET 10 SDK
 - Visual Studio 2022 17.14+ or VS Code with .NET MAUI extension
 - Xcode 16+ (for iOS) or Android SDK
 
