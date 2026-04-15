@@ -31,7 +31,7 @@ Built as a companion app for a video walkthrough of Nalu's capabilities.
 
 ### Prerequisites
 
-- .NET 10 SDK (or later)
+- .NET 10 SDK
 - Visual Studio 2022 17.14+ or VS Code with .NET MAUI extension
 - Xcode 16+ (for iOS) or Android SDK
 
@@ -39,12 +39,12 @@ Built as a companion app for a video walkthrough of Nalu's capabilities.
 
 ```bash
 # iOS Simulator
-dotnet build -f net10.0-ios -r iossimulator-arm64
-xcrun simctl install booted bin/Debug/net10.0-ios/iossimulator-arm64/Nalu.Maui.TaskFlow.app
+dotnet build src/Nalu.Maui.TaskFlow -f net10.0-ios -r iossimulator-arm64
+xcrun simctl install booted src/Nalu.Maui.TaskFlow/bin/Debug/net10.0-ios/iossimulator-arm64/Nalu.Maui.TaskFlow.app
 xcrun simctl launch booted com.nalu.maui.taskflow
 
 # Android
-dotnet build -f net10.0-android -t:Run
+dotnet build src/Nalu.Maui.TaskFlow -f net10.0-android -t:Run
 ```
 
 ## NuGet Packages Used
@@ -59,14 +59,17 @@ dotnet build -f net10.0-android -t:Run
 ## App Structure
 
 ```
-├── PageModels/          # ViewModels (MVVM with CommunityToolkit)
-├── Pages/               # XAML views
-├── Models/              # TaskItem, TimeEntry, TaskListFilter
-├── Services/            # TaskService (in-memory data)
-├── Popups/              # Discard changes confirmation
-├── AppShellTabBar.*     # Custom animated tab bar
-├── FancyTabBarShape.cs  # Curved inset path for tab bar
-└── MauiProgram.cs       # Nalu + service registration
+├── MauiNaluSample.slnx     # Solution file
+├── src/Nalu.Maui.TaskFlow/
+│   ├── PageModels/          # ViewModels (MVVM with CommunityToolkit)
+│   ├── Pages/               # XAML views
+│   ├── Models/              # TaskItem, TimeEntry, TaskListFilter
+│   ├── Services/            # TaskService (in-memory data)
+│   ├── Popups/              # Discard changes confirmation
+│   ├── AppShellTabBar.*     # Custom animated tab bar
+│   ├── FancyTabBarShape.cs  # Curved inset path for tab bar
+│   └── MauiProgram.cs       # Nalu + service registration
+└── docs/                    # Screenshots
 ```
 
 ## Credits
