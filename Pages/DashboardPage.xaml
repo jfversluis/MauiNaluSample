@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pm="clr-namespace:Nalu.Maui.TaskFlow.PageModels"
+             x:Class="Nalu.Maui.TaskFlow.Pages.DashboardPage"
+             x:DataType="pm:DashboardPageModel"
+             Title="Dashboard">
+
+    <ScrollView Padding="20">
+        <VerticalStackLayout Spacing="20">
+
+            <!-- Header -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="👋 Welcome back!"
+                       Style="{StaticResource HeadingStyle}"
+                       FontSize="28" />
+                <Label Text="Here's your task overview"
+                       Style="{StaticResource SubheadingStyle}" />
+            </VerticalStackLayout>
+
+            <!-- Dashboard cards -->
+            <Grid ColumnDefinitions="*,*"
+                  RowDefinitions="160,160"
+                  ColumnSpacing="12"
+                  RowSpacing="12">
+
+                <!-- Total Tasks -->
+                <Border Style="{StaticResource CardStyle}" BackgroundColor="#6C5CE7">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoToAllTasksCommand}" />
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="8" VerticalOptions="Center">
+                        <Label Text="&#xe8f9;" FontFamily="MaterialFilled" FontSize="28" TextColor="White" />
+                        <Label Text="{Binding TotalTasks}" FontFamily="OpenSansSemibold" FontSize="36" TextColor="White" />
+                        <Label Text="Total Tasks" FontSize="13" TextColor="#CCFFFFFF" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Completed -->
+                <Border Grid.Column="1" Style="{StaticResource CardStyle}" BackgroundColor="#00B894">
+                    <VerticalStackLayout Spacing="8" VerticalOptions="Center">
+                        <Label Text="&#xe876;" FontFamily="MaterialFilled" FontSize="28" TextColor="White" />
+                        <Label Text="{Binding CompletedTasks}" FontFamily="OpenSansSemibold" FontSize="36" TextColor="White" />
+                        <Label Text="Completed" FontSize="13" TextColor="#CCFFFFFF" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Overdue -->
+                <Border Grid.Row="1" Style="{StaticResource CardStyle}" BackgroundColor="#E17055">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoToOverdueCommand}" />
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="8" VerticalOptions="Center">
+                        <Label Text="&#xe002;" FontFamily="MaterialFilled" FontSize="28" TextColor="White" />
+                        <Label Text="{Binding OverdueTasks}" FontFamily="OpenSansSemibold" FontSize="36" TextColor="White" />
+                        <Label Text="Overdue  ➜" FontSize="13" TextColor="#CCFFFFFF" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- High Priority -->
+                <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource CardStyle}" BackgroundColor="#FDCB6E">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoToHighPriorityCommand}" />
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="8" VerticalOptions="Center">
+                        <Label Text="&#xe645;" FontFamily="MaterialFilled" FontSize="28" TextColor="#2D3436" />
+                        <Label Text="{Binding HighPriorityTasks}" FontFamily="OpenSansSemibold" FontSize="36" TextColor="#2D3436" />
+                        <Label Text="High Priority  ➜" FontSize="13" TextColor="#88000000" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- Tip card -->
+            <Border Style="{StaticResource CardStyle}" Padding="20">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="💡 Nalu Navigation"
+                           Style="{StaticResource SubheadingStyle}"
+                           TextColor="{StaticResource Primary}" />
+                    <Label Text="Tap Overdue or High Priority to push a filtered task list with type-safe navigation intents!"
+                           Style="{StaticResource BodyStyle}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <BoxView HeightRequest="80" Color="Transparent" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<Grid xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+      xmlns:local="clr-namespace:Nalu.Maui.TaskFlow"
+      xmlns:nalu="https://nalu-development.github.com/nalu/layouts"
+      SafeAreaEdges="None"
+      x:Class="Nalu.Maui.TaskFlow.AppShellTabBar">
+    <Grid.Resources>
+        <Style TargetType="ImageButton">
+            <Setter Property="Padding" Value="12"/>
+            <Setter Property="HeightRequest" Value="48"/>
+        </Style>
+        <Style TargetType="FontImageSource">
+            <Setter Property="Size" Value="24"/>
+            <Setter Property="FontFamily" Value="MaterialRound"/>
+            <Setter Property="Color" Value="#888"/>
+        </Style>
+    </Grid.Resources>
+    <Border x:Name="TabBarBorder"
+            SafeAreaEdges="None"
+            ZIndex="1"
+            StrokeThickness="0"
+            BackgroundColor="White"
+            Shadow="{Shadow Radius=4, Offset='1,1', Opacity=0.16}">
+        <Border.StrokeShape>
+            <local:FancyTabBarShape x:Name="TabBarShape"
+                                    InsetHeight="40"
+                                    InsetWidth="120" />
+        </Border.StrokeShape>
+        <Grid x:Name="Buttons"
+              ColumnDefinitions="*,*,*,*"
+              SafeAreaEdges="None"
+              Padding="20,0,20,12">
+            <!-- Dashboard -->
+            <ImageButton Source="{FontImageSource Glyph='&#xe871;'}"
+                         Grid.Column="0"
+                         Clicked="IconClicked"/>
+            <!-- Tasks -->
+            <ImageButton Source="{FontImageSource Glyph='&#xe8f9;'}"
+                         Grid.Column="1"
+                         Clicked="IconClicked"/>
+            <!-- Time -->
+            <ImageButton Source="{FontImageSource Glyph='&#xe425;'}"
+                         Grid.Column="2"
+                         Clicked="IconClicked"/>
+            <!-- Settings -->
+            <ImageButton Source="{FontImageSource Glyph='&#xe8b8;'}"
+                         Grid.Column="3"
+                         Clicked="IconClicked"/>
+        </Grid>
+    </Border>
+
+    <Grid TranslationY="-16"
+          VerticalOptions="Start">
+        <nalu:ViewBox x:Name="SelectedShape" HorizontalOptions="Start" TranslationX="36">
+            <Border x:Name="FloatingBorder"
+                    HeightRequest="48"
+                    StrokeThickness="0"
+                    WidthRequest="48"
+                    BackgroundColor="White"
+                    Shadow="{Shadow Radius=4, Offset='1,1', Opacity=0.4}"
+                    StrokeShape="RoundRectangle 24">
+                <ImageButton x:Name="SelectedButton" Clicked="SelectedButtonClicked" Padding="10">
+                    <ImageButton.Source>
+                        <FontImageSource Glyph="&#xe871;"
+                                         Color="Black"/>
+                    </ImageButton.Source>
+                </ImageButton>
+            </Border>
+        </nalu:ViewBox>
+    </Grid>
+</Grid>

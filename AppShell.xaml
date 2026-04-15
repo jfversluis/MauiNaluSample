@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<nalu:NaluShell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:nalu="https://nalu-development.github.com/nalu/navigation"
+                xmlns:pages="clr-namespace:Nalu.Maui.TaskFlow.Pages"
+                xmlns:local="clr-namespace:Nalu.Maui.TaskFlow"
+                x:Class="Nalu.Maui.TaskFlow.AppShell"
+                FlyoutBehavior="Disabled">
+
+    <FlyoutItem Route="main"
+                FlyoutDisplayOptions="AsMultipleItems"
+                Title="Tabs"
+                nalu:NaluShell.TabBarView="{local:AppShellTabBar}">
+
+        <ShellContent nalu:Navigation.PageType="pages:DashboardPage"
+                      Title="Dashboard"
+                      Icon="{FontImageSource Glyph='&#xe871;'}" />
+
+        <ShellContent nalu:Navigation.PageType="pages:TaskListPage"
+                      Title="Tasks"
+                      Icon="{FontImageSource Glyph='&#xe8f9;'}" />
+
+        <ShellContent nalu:Navigation.PageType="pages:TimeLogPage"
+                      Title="Time"
+                      Icon="{FontImageSource Glyph='&#xe425;'}" />
+
+        <ShellContent nalu:Navigation.PageType="pages:SettingsPage"
+                      Title="Settings"
+                      Icon="{FontImageSource Glyph='&#xe8b8;'}" />
+    </FlyoutItem>
+</nalu:NaluShell>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Color x:Key="Primary">#6C5CE7</Color>
+    <Color x:Key="PrimaryDark">#5A4BD1</Color>
+    <Color x:Key="Secondary">#00CEC9</Color>
+    <Color x:Key="Accent">#FD79A8</Color>
+    <Color x:Key="HighPriority">#E17055</Color>
+    <Color x:Key="MediumPriority">#FDCB6E</Color>
+    <Color x:Key="LowPriority">#00B894</Color>
+
+    <!-- Light theme colors -->
+    <Color x:Key="SurfaceLight_Light">#F8F9FA</Color>
+    <Color x:Key="Surface_Light">#FFFFFF</Color>
+    <Color x:Key="TextPrimary_Light">#2D3436</Color>
+    <Color x:Key="TextSecondary_Light">#636E72</Color>
+    <Color x:Key="TextMuted_Light">#B2BEC3</Color>
+
+    <!-- Dark theme colors -->
+    <Color x:Key="SurfaceLight_Dark">#0F0F1A</Color>
+    <Color x:Key="Surface_Dark">#1A1A2E</Color>
+    <Color x:Key="TextPrimary_Dark">#ECEDEE</Color>
+    <Color x:Key="TextSecondary_Dark">#A0A8B0</Color>
+    <Color x:Key="TextMuted_Dark">#5A6068</Color>
+
+    <!-- Legacy keys (used by non-themed elements) -->
+    <Color x:Key="Surface">#FFFFFF</Color>
+    <Color x:Key="SurfaceLight">#F8F9FA</Color>
+    <Color x:Key="TextPrimary">#2D3436</Color>
+    <Color x:Key="TextSecondary">#636E72</Color>
+    <Color x:Key="TextMuted">#B2BEC3</Color>
+    <Color x:Key="DividerColor">#E9ECEF</Color>
+
+</ResourceDictionary>

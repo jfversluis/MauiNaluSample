@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pm="clr-namespace:Nalu.Maui.TaskFlow.PageModels"
+             xmlns:m="clr-namespace:Nalu.Maui.TaskFlow.Models"
+             x:Class="Nalu.Maui.TaskFlow.Pages.TaskEditorPage"
+             x:DataType="pm:TaskEditorPageModel"
+             Title="{Binding PageTitle}">
+
+    <ScrollView Padding="20">
+        <VerticalStackLayout Spacing="16">
+
+            <Label Text="{Binding PageTitle}"
+                   Style="{StaticResource HeadingStyle}" />
+
+            <!-- Title -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Title" Style="{StaticResource SubheadingStyle}" />
+                <Border Style="{StaticResource CardStyle}" Padding="4,0">
+                    <Entry Text="{Binding Title}"
+                           Placeholder="What needs to be done?"
+                           FontFamily="OpenSansRegular"
+                           FontSize="16" />
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- Description -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Description" Style="{StaticResource SubheadingStyle}" />
+                <Border Style="{StaticResource CardStyle}" Padding="4,0">
+                    <Editor Text="{Binding Description}"
+                            Placeholder="Add details..."
+                            FontFamily="OpenSansRegular"
+                            FontSize="14"
+                            HeightRequest="100"
+                            AutoSize="TextChanges" />
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- Priority Selector -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Priority" Style="{StaticResource SubheadingStyle}" />
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                    <Border Grid.Column="0" BackgroundColor="{Binding HighBg}"
+                            Stroke="#E53935" StrokeThickness="2"
+                            StrokeShape="RoundRectangle 12"
+                            Padding="0,14">
+                        <Label Text="🔴 High" TextColor="{Binding HighFg}"
+                               HorizontalOptions="Center" FontSize="14" FontFamily="OpenSansSemibold" />
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectPriorityCommand}" CommandParameter="0" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Border Grid.Column="1" BackgroundColor="{Binding MediumBg}"
+                            Stroke="#FB8C00" StrokeThickness="2"
+                            StrokeShape="RoundRectangle 12"
+                            Padding="0,14">
+                        <Label Text="🟡 Medium" TextColor="{Binding MediumFg}"
+                               HorizontalOptions="Center" FontSize="14" FontFamily="OpenSansSemibold" />
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectPriorityCommand}" CommandParameter="1" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Border Grid.Column="2" BackgroundColor="{Binding LowBg}"
+                            Stroke="#43A047" StrokeThickness="2"
+                            StrokeShape="RoundRectangle 12"
+                            Padding="0,14">
+                        <Label Text="🟢 Low" TextColor="{Binding LowFg}"
+                               HorizontalOptions="Center" FontSize="14" FontFamily="OpenSansSemibold" />
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectPriorityCommand}" CommandParameter="2" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                </Grid>
+            </VerticalStackLayout>
+
+            <!-- Due Date -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Due Date" Style="{StaticResource SubheadingStyle}" />
+                <Border Style="{StaticResource CardStyle}" Padding="12,8">
+                    <DatePicker Date="{Binding DueDate}"
+                                FontFamily="OpenSansRegular"
+                                FontSize="16" />
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- Tags -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Tags (comma separated)" Style="{StaticResource SubheadingStyle}" />
+                <Border Style="{StaticResource CardStyle}" Padding="4,0">
+                    <Entry Text="{Binding TagsText}"
+                           Placeholder="Design, Frontend, Bug..."
+                           FontFamily="OpenSansRegular"
+                           FontSize="14" />
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- Save Button -->
+            <Button Text="💾 Save Task"
+                    Command="{Binding SaveCommand}"
+                    Style="{StaticResource PrimaryButtonStyle}"
+                    Margin="0,8,0,80" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

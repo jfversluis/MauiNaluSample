@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:nalu="https://nalu-development.github.com/nalu/layouts"
+             xmlns:pm="clr-namespace:Nalu.Maui.TaskFlow.PageModels"
+             xmlns:local="clr-namespace:Nalu.Maui.TaskFlow.Pages"
+             x:Class="Nalu.Maui.TaskFlow.Pages.SettingsPage"
+             x:DataType="pm:SettingsPageModel"
+             Title="Settings">
+
+    <ContentPage.Resources>
+        <local:BoolToChipOpacityConverter x:Key="BoolToChipOpacity" />
+    </ContentPage.Resources>
+
+    <ScrollView Padding="20">
+        <VerticalStackLayout Spacing="20">
+
+            <Label Text="⚙️ Settings"
+                   Style="{StaticResource HeadingStyle}" />
+
+            <!-- Tag Chips with HorizontalWrapLayout -->
+            <Border Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="🏷️ Filter by Tags"
+                           Style="{StaticResource SubheadingStyle}" />
+                    <Label Text="Uses HorizontalWrapLayout — chips flow naturally and wrap to the next line"
+                           Style="{StaticResource CaptionStyle}" />
+
+                    <nalu:HorizontalWrapLayout HorizontalSpacing="8"
+                                               VerticalSpacing="8"
+                                               BindableLayout.ItemsSource="{Binding TagChips}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="pm:TagChip">
+                                <Border StrokeThickness="0"
+                                        Padding="12,6"
+                                        StrokeShape="RoundRectangle 14"
+                                        BackgroundColor="{StaticResource Primary}"
+                                        Opacity="{Binding IsSelected, Converter={StaticResource BoolToChipOpacity}}">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ToggleTagCommand}"
+                                                              CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+                                    <Label Text="{Binding Name}"
+                                           TextColor="White"
+                                           FontFamily="OpenSansSemibold"
+                                           FontSize="13" />
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </nalu:HorizontalWrapLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Theme Toggle with ToggleTemplate -->
+            <Border Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="🎨 Theme"
+                           Style="{StaticResource SubheadingStyle}" />
+                    <Label Text="ToggleTemplate swaps entire visual trees — no IsVisible hacks"
+                           Style="{StaticResource CaptionStyle}" />
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <nalu:ToggleTemplate Value="{Binding IsDarkMode}">
+                            <nalu:ToggleTemplate.WhenFalse>
+                                <DataTemplate>
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Label Text="&#xe518;"
+                                               FontFamily="MaterialFilled"
+                                               FontSize="24"
+                                               TextColor="#FDCB6E"
+                                               VerticalOptions="Center" />
+                                        <Label Text="Light Mode"
+                                               Style="{StaticResource BodyStyle}"
+                                               VerticalOptions="Center" />
+                                    </HorizontalStackLayout>
+                                </DataTemplate>
+                            </nalu:ToggleTemplate.WhenFalse>
+                            <nalu:ToggleTemplate.WhenTrue>
+                                <DataTemplate>
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Label Text="&#xef72;"
+                                               FontFamily="MaterialFilled"
+                                               FontSize="24"
+                                               TextColor="#6C5CE7"
+                                               VerticalOptions="Center" />
+                                        <Label Text="Dark Mode"
+                                               Style="{StaticResource BodyStyle}"
+                                               VerticalOptions="Center" />
+                                    </HorizontalStackLayout>
+                                </DataTemplate>
+                            </nalu:ToggleTemplate.WhenTrue>
+                        </nalu:ToggleTemplate>
+
+                        <Switch Grid.Column="1"
+                                IsToggled="{Binding IsDarkMode}"
+                                OnColor="{StaticResource Primary}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- About section with ExpanderViewBox -->
+            <Border Style="{StaticResource CardStyle}" Padding="0">
+                <VerticalStackLayout>
+                    <nalu:ExpanderViewBox CollapsedHeight="48"
+                                          IsExpanded="{Binding ShowAbout}">
+                        <VerticalStackLayout>
+                            <Grid ColumnDefinitions="*,Auto" Padding="16,12">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ToggleAboutCommand}" />
+                                </Grid.GestureRecognizers>
+                                <Label Text="ℹ️ About TaskFlow"
+                                       Style="{StaticResource SubheadingStyle}"
+                                       VerticalOptions="Center" />
+                                <Label Grid.Column="1"
+                                       Text="&#xe5cf;"
+                                       FontFamily="MaterialFilled"
+                                       FontSize="24"
+                                       TextColor="{AppThemeBinding Light=#B2BEC3, Dark=#5A6068}"
+                                       VerticalOptions="Center" />
+                            </Grid>
+                            <VerticalStackLayout Padding="16,0,16,16" Spacing="12">
+                                <Label Text="{Binding AppVersion}"
+                                       Style="{StaticResource BodyStyle}" />
+                                <Label Style="{StaticResource BodyStyle}"
+                                       Text="This demo showcases Nalu.Maui features:" />
+                                <Label Style="{StaticResource CaptionStyle}"
+                                       Text="• VirtualScroll — high-performance lists&#10;• Navigation — type-safe with guards &amp; intents&#10;• ExpanderViewBox — animated expand/collapse&#10;• ToggleTemplate — template swapping&#10;• HorizontalWrapLayout — flowing chips&#10;• DurationWheel — time picker control&#10;• Custom TabBar — fancy animated tab bar&#10;• ViewBox — lightweight containers" />
+                                <Label Style="{StaticResource CaptionStyle}"
+                                       TextColor="{StaticResource Primary}"
+                                       Text="Built with ❤️ by the Nalu community" />
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </nalu:ExpanderViewBox>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Bottom spacer -->
+            <BoxView HeightRequest="80" Color="Transparent" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

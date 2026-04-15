@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:nalu="https://nalu-development.github.com/nalu/layouts"
+             xmlns:vs="https://nalu-development.github.com/nalu/virtualscroll"
+             xmlns:pm="clr-namespace:Nalu.Maui.TaskFlow.PageModels"
+             xmlns:m="clr-namespace:Nalu.Maui.TaskFlow.Models"
+             xmlns:local="clr-namespace:Nalu.Maui.TaskFlow.Pages"
+             x:Class="Nalu.Maui.TaskFlow.Pages.TaskListPage"
+             x:DataType="pm:TaskListPageModel"
+             Title="{Binding PageTitle}">
+
+    <ContentPage.Resources>
+        <local:PriorityColorConverter x:Key="PriorityColorConverter" />
+        <local:BoolToCheckIconConverter x:Key="BoolToCheckIcon" />
+        <local:BoolToCheckColorConverter x:Key="BoolToCheckColor" />
+    </ContentPage.Resources>
+
+    <Shell.TitleView>
+        <Grid ColumnDefinitions="*,Auto" Padding="0,0,12,0">
+            <VerticalStackLayout VerticalOptions="Center" Spacing="2">
+                <Label Text="{Binding PageTitle}"
+                       FontFamily="OpenSansSemibold" FontSize="18"
+                       TextColor="{AppThemeBinding Light=#2D3436, Dark=#ECEDEE}" />
+                <Label Text="{Binding Tasks.Count, StringFormat='{0} tasks'}"
+                       FontSize="11"
+                       TextColor="{AppThemeBinding Light=#B2BEC3, Dark=#5A6068}" />
+            </VerticalStackLayout>
+            <Button Grid.Column="1"
+                    Text="＋ New"
+                    Command="{Binding AddTaskCommand}"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White"
+                    FontFamily="OpenSansSemibold"
+                    FontSize="13"
+                    CornerRadius="14"
+                    Padding="12,6"
+                    VerticalOptions="Center" />
+        </Grid>
+    </Shell.TitleView>
+
+    <!-- VirtualScroll list -->
+    <vs:VirtualScroll x:Name="TaskScroll"
+                      ItemsSource="{Binding Adapter}"
+                      RefreshCommand="{Binding RefreshCommand}"
+                      IsRefreshEnabled="True"
+                      FadingEdgeLength="80"
+                      BackgroundColor="Transparent">
+        <vs:VirtualScroll.ItemTemplate>
+            <DataTemplate x:DataType="m:TaskItem">
+                <nalu:ViewBox Padding="16,4">
+                    <Border Style="{StaticResource CardStyle}" Padding="0">
+                        <VerticalStackLayout>
+                            <!-- Always-visible header row (OUTSIDE ExpanderViewBox) -->
+                            <Grid ColumnDefinitions="Auto,*,Auto,Auto"
+                                  Padding="16,12"
+                                  ColumnSpacing="12"
+                                  HeightRequest="60">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ToggleExpandCommand}" />
+                                </Grid.GestureRecognizers>
+                                <BoxView WidthRequest="4"
+                                         CornerRadius="2"
+                                         VerticalOptions="Fill"
+                                         Color="{Binding Priority, Converter={StaticResource PriorityColorConverter}}" />
+                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                    <Label Text="{Binding Title}"
+                                           FontFamily="OpenSansSemibold"
+                                           FontSize="15"
+                                           TextColor="{AppThemeBinding Light=#2D3436, Dark=#ECEDEE}"
+                                           LineBreakMode="TailTruncation" />
+                                    <Label FontSize="12"
+                                           TextColor="{AppThemeBinding Light=#B2BEC3, Dark=#5A6068}">
+                                        <Label.Text>
+                                            <MultiBinding StringFormat="{}{0:MMM dd} • {1}">
+                                                <Binding Path="DueDate" />
+                                                <Binding Path="Priority" />
+                                            </MultiBinding>
+                                        </Label.Text>
+                                    </Label>
+                                </VerticalStackLayout>
+                                <Label Grid.Column="2"
+                                       FontFamily="MaterialFilled"
+                                       FontSize="24"
+                                       VerticalOptions="Center"
+                                       Text="{Binding IsCompleted, Converter={StaticResource BoolToCheckIcon}}"
+                                       TextColor="{Binding IsCompleted, Converter={StaticResource BoolToCheckColor}}" />
+                                <Label Grid.Column="3"
+                                       Text="&#xe5cf;"
+                                       FontFamily="MaterialFilled"
+                                       FontSize="20"
+                                       VerticalOptions="Center"
+                                       TextColor="{AppThemeBinding Light=#B2BEC3, Dark=#5A6068}" />
+                            </Grid>
+
+                            <!-- Expandable details (CollapsedHeight=0 since header is outside) -->
+                            <nalu:ExpanderViewBox CollapsedHeight="0"
+                                                  IsExpanded="{Binding IsExpanded}">
+                                <VerticalStackLayout Padding="16,0,16,16" Spacing="8">
+                                    <Label Text="{Binding Description}"
+                                           Style="{StaticResource BodyStyle}"
+                                           MaxLines="3" />
+                                    <HorizontalStackLayout Spacing="6">
+                                        <Label Text="&#xe425;"
+                                               FontFamily="MaterialFilled" FontSize="14"
+                                               TextColor="{AppThemeBinding Light=#B2BEC3, Dark=#5A6068}" VerticalOptions="Center" />
+                                        <Label Text="{Binding TotalTimeLogged, StringFormat='{0:h\\:mm} logged'}"
+                                               Style="{StaticResource CaptionStyle}" VerticalOptions="Center" />
+                                    </HorizontalStackLayout>
+                                    <Button Text="✏️ Edit Task"
+                                            Style="{StaticResource PrimaryButtonStyle}"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditTaskCommand}"
+                                            CommandParameter="{Binding .}"
+                                            HorizontalOptions="Start"
+                                            Padding="12,8" FontSize="13" />
+                                </VerticalStackLayout>
+                            </nalu:ExpanderViewBox>
+                        </VerticalStackLayout>
+                    </Border>
+                </nalu:ViewBox>
+            </DataTemplate>
+        </vs:VirtualScroll.ItemTemplate>
+    </vs:VirtualScroll>
+</ContentPage>

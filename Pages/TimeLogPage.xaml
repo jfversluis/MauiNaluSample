@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:nalu="https://nalu-development.github.com/nalu/layouts"
+             xmlns:controls="https://nalu-development.github.com/nalu/controls"
+             xmlns:pm="clr-namespace:Nalu.Maui.TaskFlow.PageModels"
+             xmlns:m="clr-namespace:Nalu.Maui.TaskFlow.Models"
+             xmlns:local="clr-namespace:Nalu.Maui.TaskFlow.Pages"
+             x:Class="Nalu.Maui.TaskFlow.Pages.TimeLogPage"
+             x:DataType="pm:TimeLogPageModel"
+             Title="Time Log">
+
+    <ContentPage.Resources>
+        <local:BoolToColorConverter x:Key="BoolToColor" />
+        <local:InvertedBoolToColorConverter x:Key="InvertedBoolToColor" />
+    </ContentPage.Resources>
+
+    <ScrollView Padding="20">
+        <VerticalStackLayout Spacing="16">
+
+            <Label Text="⏱️ Log Time"
+                   Style="{StaticResource HeadingStyle}" />
+
+            <!-- Task picker -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Select Task" Style="{StaticResource SubheadingStyle}" />
+                <Border Style="{StaticResource CardStyle}" Padding="4,0">
+                    <Picker ItemsSource="{Binding AvailableTasks}"
+                            SelectedItem="{Binding SelectedTask}"
+                            ItemDisplayBinding="{Binding Title}"
+                            FontFamily="OpenSansRegular" />
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- DurationWheel -->
+            <Border Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Duration"
+                           Style="{StaticResource SubheadingStyle}" />
+                    <controls:DurationWheel Duration="{Binding SelectedDuration}"
+                                            MaximumDuration="08:00:00"
+                                            HeightRequest="180"
+                                            HorizontalOptions="Center"
+                                            WidthRequest="280" />
+                    <Label HorizontalOptions="Center"
+                           Style="{StaticResource CaptionStyle}">
+                        <Label.Text>
+                            <Binding Path="SelectedDuration" StringFormat="Selected: {0:h\:mm}" />
+                        </Label.Text>
+                    </Label>
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Text="✅ Log Time Entry"
+                    Command="{Binding LogTimeCommand}"
+                    Style="{StaticResource PrimaryButtonStyle}" />
+
+            <!-- Toggle between log view and summary -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                <Button Text="Recent Entries"
+                        BackgroundColor="{Binding ShowSummary, Converter={StaticResource InvertedBoolToColor}}"
+                        TextColor="White"
+                        CornerRadius="12"
+                        Command="{Binding SetViewCommand}"
+                        CommandParameter="recent" />
+                <Button Grid.Column="1"
+                        Text="Summary"
+                        BackgroundColor="{Binding ShowSummary, Converter={StaticResource BoolToColor}}"
+                        TextColor="White"
+                        CornerRadius="12"
+                        Command="{Binding SetViewCommand}"
+                        CommandParameter="summary" />
+            </Grid>
+
+            <!-- ToggleTemplate: switch between entry list and summary -->
+            <nalu:ToggleTemplate Value="{Binding ShowSummary}">
+                <nalu:ToggleTemplate.WhenFalse>
+                    <DataTemplate>
+                        <VerticalStackLayout Spacing="8"
+                                             BindingContext="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext}"
+                                             x:DataType="pm:TimeLogPageModel">
+                            <Label Text="📋 Recent Time Entries"
+                                   Style="{StaticResource SubheadingStyle}" />
+                            <CollectionView ItemsSource="{Binding RecentEntries}"
+                                            HeightRequest="300">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="m:TimeEntry">
+                                        <nalu:ViewBox Padding="0,4">
+                                            <Border Style="{StaticResource CardStyle}" Padding="12,10">
+                                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                                    <VerticalStackLayout Spacing="2">
+                                                        <Label Text="{Binding TaskTitle}"
+                                                               FontFamily="OpenSansSemibold"
+                                                               FontSize="14"
+                                                               TextColor="{AppThemeBinding Light=#2D3436, Dark=#ECEDEE}"
+                                                               LineBreakMode="TailTruncation" />
+                                                        <Label Text="{Binding LoggedAt, StringFormat='{0:MMM dd, HH:mm}'}"
+                                                               Style="{StaticResource CaptionStyle}" />
+                                                    </VerticalStackLayout>
+                                                    <Label Grid.Column="1"
+                                                           Text="{Binding Duration, StringFormat='{0:h\\:mm}'}"
+                                                           FontFamily="OpenSansSemibold"
+                                                           FontSize="16"
+                                                           TextColor="{StaticResource Primary}"
+                                                           VerticalOptions="Center" />
+                                                </Grid>
+                                            </Border>
+                                        </nalu:ViewBox>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </nalu:ToggleTemplate.WhenFalse>
+                <nalu:ToggleTemplate.WhenTrue>
+                    <DataTemplate>
+                        <Border Style="{StaticResource CardStyle}"
+                                BindingContext="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext}"
+                                x:DataType="pm:TimeLogPageModel">
+                            <VerticalStackLayout Spacing="12">
+                                <Label Text="📊 Time Summary"
+                                       Style="{StaticResource SubheadingStyle}" />
+                                <Label Text="Total entries logged this session. The ToggleTemplate above swaps entire visual trees — not just visibility!"
+                                       Style="{StaticResource BodyStyle}" />
+                                <Label Style="{StaticResource CaptionStyle}"
+                                       TextColor="{StaticResource Primary}">
+                                    <Label.Text>
+                                        <Binding Path="RecentEntries.Count" StringFormat="{}{0} entries recorded" />
+                                    </Label.Text>
+                                </Label>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </nalu:ToggleTemplate.WhenTrue>
+            </nalu:ToggleTemplate>
+
+            <!-- Bottom spacer for tab bar -->
+            <BoxView HeightRequest="80" Color="Transparent" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
