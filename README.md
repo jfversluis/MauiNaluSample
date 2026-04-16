@@ -51,8 +51,8 @@ dotnet build src/Nalu.Maui.TaskFlow -f net10.0-android -t:Run
 
 | Package | Version |
 |---------|---------|
-| [Nalu.Maui](https://www.nuget.org/packages/Nalu.Maui) | 10.7.3 |
-| [Nalu.Maui.VirtualScroll](https://www.nuget.org/packages/Nalu.Maui.VirtualScroll) | 10.7.3 |
+| [Nalu.Maui](https://www.nuget.org/packages/Nalu.Maui) | 10.7.5 |
+| [Nalu.Maui.VirtualScroll](https://www.nuget.org/packages/Nalu.Maui.VirtualScroll) | 10.7.5 |
 | [CommunityToolkit.Maui](https://www.nuget.org/packages/CommunityToolkit.Maui) | 13.0.0 |
 | [CommunityToolkit.Mvvm](https://www.nuget.org/packages/CommunityToolkit.Mvvm) | 8.4.0 |
 
