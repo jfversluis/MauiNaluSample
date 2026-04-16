@@ -1,0 +1,1 @@
+MONO_GC_PARAMS=bridge-implementation=tarjan,disable-non-bridge-scc,soft-heap-limit=192m,nursery-size=16m

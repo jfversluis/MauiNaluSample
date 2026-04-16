@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-using CommunityToolkit.Maui;
 using Nalu.Maui.TaskFlow.PageModels;
 using Nalu.Maui.TaskFlow.Pages;
 using Nalu.Maui.TaskFlow.PopupModels;
@@ -8,7 +6,6 @@ using Nalu.Maui.TaskFlow.Services;
 
 namespace Nalu.Maui.TaskFlow;
 
-[SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
 public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
@@ -29,7 +26,6 @@ public static class MauiProgram
             .UseNaluControls()
             .UseNaluVirtualScroll()
             .UseNaluTabBar()
-            .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
