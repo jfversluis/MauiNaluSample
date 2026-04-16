@@ -108,7 +108,7 @@ public partial class AppShellTabBar
         );
     }
 
-    private void IconClicked(object? sender, EventArgs e)
+    private async void IconClicked(object? sender, EventArgs e)
     {
         var icon = (ImageButton)sender!;
         var parent = (Layout)icon.Parent!;
@@ -120,7 +120,7 @@ public partial class AppShellTabBar
             return;
         }
 
-        NaluTabBar.GoTo(targetSection);
+        await Shell.Current.GoToAsync($"//{targetSection.CurrentItem.Route}");
     }
 
     private void SelectedButtonClicked(object? sender, EventArgs e)
