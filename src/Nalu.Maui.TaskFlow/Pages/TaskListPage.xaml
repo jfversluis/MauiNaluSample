@@ -83,7 +83,12 @@
                                        FontSize="24"
                                        VerticalOptions="Center"
                                        Text="{Binding IsCompleted, Converter={StaticResource BoolToCheckIcon}}"
-                                       TextColor="{Binding IsCompleted, Converter={StaticResource BoolToCheckColor}}" />
+                                       TextColor="{Binding IsCompleted, Converter={StaticResource BoolToCheckColor}}">
+                                    <View.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ToggleCompleteCommand, Source={RelativeSource FindAncestorBindingContext, AncestorType=pm:TaskListPageModel}, x:DataType=pm:TaskListPageModel}"
+                                            CommandParameter="{Binding .}" />
+                                    </View.GestureRecognizers>
+                                </Label>
                                 <Label Grid.Column="3"
                                        Text="&#xe5cf;"
                                        FontFamily="MaterialFilled"
