@@ -45,9 +45,11 @@ public partial class AppShellTabBar
         var endPosition = buttonFractionalOffset * selectedIndex;
         var startTranslationX = SelectedShape.TranslationX;
         var availableTranslationWidth = ((View)SelectedShape.Parent.Parent).Width;
-        var endTranslationX = (availableTranslationWidth - TabBarShape.InsetWidth) * buttonFractionalOffset * selectedIndex + 36;
+        var endTranslationX = (availableTranslationWidth - TabBarShape.InsetWidth) * buttonFractionalOffset * selectedIndex + 32;
 
         AnimateSelectedShapeJump(selectedIndex);
+
+        SelectedShapeContainer.TranslationX = startTranslationX - 0.001;
         this.Animate("CurrentItem",
             v =>
             {

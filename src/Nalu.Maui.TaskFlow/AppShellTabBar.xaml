@@ -6,7 +6,8 @@
       xmlns:nalu="https://nalu-development.github.com/nalu/layouts"
       SafeAreaEdges="None"
       x:Class="Nalu.Maui.TaskFlow.AppShellTabBar">
-    <Grid SafeAreaEdges="None">
+    <Grid SafeAreaEdges="None"
+          Margin="{OnPlatform Default=0, iOS='0,0,0,-12'}">
         <Grid.Resources>
             <Style TargetType="ImageButton">
                 <Setter Property="Padding" Value="12"/>
@@ -18,8 +19,7 @@
                 <Setter Property="Color" Value="{AppThemeBinding Light='#888', Dark='#BBB'}"/>
             </Style>
         </Grid.Resources>
-        <Border x:Name="TabBarBorder"
-                SafeAreaEdges="None"
+        <Border SafeAreaEdges="Container"
                 ZIndex="1"
                 StrokeThickness="0"
                 BackgroundColor="{AppThemeBinding Light='#E9E9F0', Dark='#252547'}"
@@ -32,7 +32,7 @@
             <Grid x:Name="Buttons"
                   ColumnDefinitions="*,*,*,*"
                   SafeAreaEdges="None"
-                  Padding="20,0,20,12">
+                  Padding="20,0,20,0">
                 <!-- Dashboard -->
                 <ImageButton Source="{FontImageSource Glyph='&#xe871;'}"
                              Grid.Column="0"
@@ -53,11 +53,11 @@
         </Border>
 
         <Grid x:Name="SelectedShapeContainer"
-              TranslationY="-16"
-              TranslationX="36"
+              TranslationY="-20"
+              TranslationX="32"
               HorizontalOptions="Start"
               VerticalOptions="Start">
-            <nalu:ViewBox x:Name="SelectedShape" HorizontalOptions="Start">
+            <nalu:ViewBox x:Name="SelectedShape" HorizontalOptions="Start" Padding="4">
                 <Border HeightRequest="48"
                         StrokeThickness="0"
                         WidthRequest="48"
