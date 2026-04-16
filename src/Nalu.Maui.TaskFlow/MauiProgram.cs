@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Maui;
 using Nalu.Maui.TaskFlow.PageModels;
 using Nalu.Maui.TaskFlow.Pages;
@@ -7,6 +8,7 @@ using Nalu.Maui.TaskFlow.Services;
 
 namespace Nalu.Maui.TaskFlow;
 
+[SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
 public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
@@ -15,11 +17,14 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseNaluNavigation<App>(nav => nav
+                // Pages
                 .AddPage<DashboardPageModel, DashboardPage>()
                 .AddPage<TaskListPageModel, TaskListPage>()
                 .AddPage<TaskEditorPageModel, TaskEditorPage>()
                 .AddPage<TimeLogPageModel, TimeLogPage>()
-                .AddPage<SettingsPageModel, SettingsPage>())
+                .AddPage<SettingsPageModel, SettingsPage>()
+                // Popups
+                .AddPage<DiscardChangesPopupModel, DiscardChangesPopup>())
             .UseNaluLayouts()
             .UseNaluControls()
             .UseNaluVirtualScroll()
@@ -35,7 +40,6 @@ public static class MauiProgram
             });
 
         builder.Services.AddSingleton<TaskService>();
-        builder.Services.AddTransientPopup<DiscardChangesPopup, DiscardChangesPopupModel>();
 
         return builder.Build();
     }

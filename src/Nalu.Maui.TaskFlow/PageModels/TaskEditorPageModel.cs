@@ -1,4 +1,3 @@
-using CommunityToolkit.Maui;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nalu.Maui.TaskFlow.Models;
@@ -10,7 +9,7 @@ namespace Nalu.Maui.TaskFlow.PageModels;
 public partial class TaskEditorPageModel : ObservableObject, IEnteringAware, IEnteringAware<int>, ILeavingGuard
 {
     private readonly INavigationService _navigationService;
-    private readonly IPopupService _popupService;
+    private readonly IDispatcher _dispatcher;
     private readonly TaskService _taskService;
     private int? _editingTaskId;
     private bool _isDirty;
@@ -52,10 +51,10 @@ public partial class TaskEditorPageModel : ObservableObject, IEnteringAware, IEn
     public Color MediumFg => SelectedPriorityIndex == 1 ? Colors.White : Color.FromArgb("#FB8C00");
     public Color LowFg => SelectedPriorityIndex == 2 ? Colors.White : Color.FromArgb("#43A047");
 
-    public TaskEditorPageModel(INavigationService navigationService, IPopupService popupService, TaskService taskService)
+    public TaskEditorPageModel(INavigationService navigationService, IDispatcher dispatcher, TaskService taskService)
     {
         _navigationService = navigationService;
-        _popupService = popupService;
+        _dispatcher = dispatcher;
         _taskService = taskService;
     }
 
@@ -121,12 +120,23 @@ public partial class TaskEditorPageModel : ObservableObject, IEnteringAware, IEn
     partial void OnDueDateChanged(DateTime value) => _isDirty = true;
     partial void OnTagsTextChanged(string value) => _isDirty = true;
 
-    public async ValueTask<bool> CanLeaveAsync()
+    public ValueTask<bool> CanLeaveAsync()
     {
-        if (!_isDirty || _isSaving) return true;
+        if (!_isDirty || _isSaving) return ValueTask.FromResult(true);
 
-        var result = await _popupService.ShowPopupAsync<DiscardChangesPopupModel, bool>(Shell.Current);
-        return result.Result;
+        // Dispatch a new navigation to the prompt popup and prevent popping the current page
+        _dispatcher.Dispatch(PromptUserToDiscardChanges);
+        return ValueTask.FromResult(false);
+
+        async void PromptUserToDiscardChanges()
+        {
+            var discardChanges = await _navigationService.ResolveIntentAsync<DiscardChangesPopupModel, bool>(new DiscardIntent());
+            if (discardChanges)
+            {
+                // Ignore the navigation guard and pop
+                await _navigationService.GoToAsync(Navigation.Relative(NavigationBehavior.DefaultImmediateIgnoreGuards).Pop());
+            }
+        }
     }
 
     [RelayCommand(AllowConcurrentExecutions = false)]

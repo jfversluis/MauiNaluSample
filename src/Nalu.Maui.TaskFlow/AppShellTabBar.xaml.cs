@@ -4,39 +4,13 @@ namespace Nalu.Maui.TaskFlow;
 
 public partial class AppShellTabBar
 {
-    private int _pendingIndex = -1;
-
-    private static readonly Color DarkBg = Color.FromArgb("#252547");
-    private static readonly Color DarkIcon = Color.FromArgb("#BBB");
+    private ShellItem Item => BindingContext as ShellItem ??
+                              throw new InvalidOperationException(
+                                  "AppShellTabBar must have a ShellItem as its BindingContext");
 
     public AppShellTabBar()
     {
         InitializeComponent();
-
-        if (Application.Current is not null)
-        {
-            Application.Current.RequestedThemeChanged += (_, _) => ApplyTheme();
-            // Apply initial theme in case the user previously set dark mode
-            Dispatcher.Dispatch(ApplyTheme);
-        }
-    }
-
-    private void ApplyTheme()
-    {
-        var isDark = Application.Current?.UserAppTheme == AppTheme.Dark;
-        var bg = isDark ? DarkBg : Colors.White;
-        var iconColor = isDark ? DarkIcon : Color.FromArgb("#888");
-        var selectedGlyphColor = isDark ? Colors.White : Colors.Black;
-
-        TabBarBorder.BackgroundColor = bg;
-        FloatingBorder.BackgroundColor = bg;
-        ((FontImageSource)SelectedButton.Source).Color = selectedGlyphColor;
-
-        foreach (var child in Buttons.Children)
-        {
-            if (child is ImageButton btn && btn.Source is FontImageSource fis)
-                fis.Color = iconColor;
-        }
     }
 
     protected override void OnBindingContextChanged()
@@ -55,7 +29,7 @@ public partial class AppShellTabBar
 
     private void OnCurrentItemChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == Microsoft.Maui.Controls.ShellItem.CurrentItemProperty.PropertyName)
+        if (e.PropertyName == ShellItem.CurrentItemProperty.PropertyName)
         {
             UpdateCurrentItem(ShellItem!.CurrentItem);
         }
@@ -63,67 +37,40 @@ public partial class AppShellTabBar
 
     private void UpdateCurrentItem(ShellSection currentItem)
     {
-        var selectedIndex = Math.Min(3, ShellItem?.Items.IndexOf(currentItem) ?? 0);
-        var parent = (View)SelectedShape.Parent;
-
-        if (parent.Width <= 0)
-        {
-            // Layout not ready yet — defer until measured
-            _pendingIndex = selectedIndex;
-            parent.SizeChanged -= OnParentSizeChanged;
-            parent.SizeChanged += OnParentSizeChanged;
-            return;
-        }
-
-        AnimateToIndex(selectedIndex);
-    }
-
-    private void OnParentSizeChanged(object? sender, EventArgs e)
-    {
-        var parent = (View)sender!;
-        if (parent.Width <= 0) return;
-        parent.SizeChanged -= OnParentSizeChanged;
-
-        if (_pendingIndex >= 0)
-        {
-            SnapToIndex(_pendingIndex);
-            _pendingIndex = -1;
-        }
-    }
-
-    private void SnapToIndex(int selectedIndex)
-    {
-        var endPosition = (1.0f / 3.0f) * selectedIndex;
-        var availableWidth = ((View)SelectedShape.Parent).Width;
-        var endTranslationX = (availableWidth - TabBarShape.InsetWidth) * (1.0 / 3.0) * selectedIndex + 36;
-
-        TabBarShape.InsetPosition = (float)endPosition;
-        SelectedShape.TranslationX = endTranslationX;
-        SelectedShape.TranslationY = 0;
-        SelectedButton.Opacity = 1;
-        SelectedShape.ZIndex = 2;
-        ((FontImageSource)SelectedButton.Source).Glyph = ((FontImageSource)((ImageButton)Buttons[selectedIndex]!).Source).Glyph;
-    }
-
-    private void AnimateToIndex(int selectedIndex)
-    {
         this.CancelAnimations();
+        var numButtons = (double)Buttons.Count;
+        var selectedIndex = ShellItem?.Items.IndexOf(currentItem) ?? 0;
         var startPosition = TabBarShape.InsetPosition;
-        var endPosition = (1.0f / 3.0f) * selectedIndex;
+        var buttonFractionalOffset = 1.0 / (numButtons - 1);
+        var endPosition = buttonFractionalOffset * selectedIndex;
         var startTranslationX = SelectedShape.TranslationX;
-        var availableTranslationWidth = ((View)SelectedShape.Parent).Width;
-        var endTranslationX = (availableTranslationWidth - TabBarShape.InsetWidth) * (1.0 / 3.0) * selectedIndex + 36;
+        var availableTranslationWidth = ((View)SelectedShape.Parent.Parent).Width;
+        var endTranslationX = (availableTranslationWidth - TabBarShape.InsetWidth) * buttonFractionalOffset * selectedIndex + 36;
+
+        AnimateSelectedShapeJump(selectedIndex);
+        this.Animate("CurrentItem",
+            v =>
+            {
+                TabBarShape.InsetPosition = (float)(startPosition + (endPosition - startPosition) * v);
+                SelectedShapeContainer.TranslationX = startTranslationX + (endTranslationX - startTranslationX) * v;
+            },
+            length: 250);
+    }
+
+    private const string SelectedJumpOut = nameof(SelectedJumpOut);
+    private const string SelectedJumpIn = nameof(SelectedJumpIn);
+
+    private void AnimateSelectedShapeJump(int selectedIndex, double deltaY = 50)
+    {
+        SelectedShapeContainer.ZIndex = 0;
         var startTranslationY = SelectedShape.TranslationY;
-        var middleTranslationY = 50;
+        var middleTranslationY = deltaY;
         var startOpacity = SelectedButton.Opacity;
         var middleOpacity = 0f;
         var endTranslationY = 0;
         var endOpacity = 1f;
-
-        SelectedShape.ZIndex = 0;
-
         this.Animate(
-            "ButtonFadeOut",
+            SelectedJumpOut,
             v =>
             {
                 SelectedShape.TranslationY = startTranslationY + (middleTranslationY - startTranslationY) * v;
@@ -132,12 +79,16 @@ public partial class AppShellTabBar
             length: 125,
             finished: (_, canceled) =>
             {
-                if (canceled) return;
+                if (canceled)
+                {
+                    return;
+                }
 
-                ((FontImageSource)SelectedButton.Source).Glyph = ((FontImageSource)((ImageButton)Buttons[selectedIndex]!).Source).Glyph;
+                ((FontImageSource)SelectedButton.Source).Glyph =
+                    ((FontImageSource)((ImageButton)Buttons[selectedIndex]!).Source).Glyph;
 
                 this.Animate(
-                    "ButtonFadeIn",
+                    SelectedJumpIn,
                     v =>
                     {
                         SelectedShape.TranslationY = middleTranslationY + (endTranslationY - middleTranslationY) * v;
@@ -145,20 +96,16 @@ public partial class AppShellTabBar
                     },
                     finished: (_, canceled2) =>
                     {
-                        if (canceled2) return;
-                        SelectedShape.ZIndex = 2;
+                        if (canceled2)
+                        {
+                            return;
+                        }
+
+                        SelectedShapeContainer.ZIndex = 2;
                     }
                 );
             }
         );
-
-        this.Animate("CurrentItem",
-            v =>
-            {
-                TabBarShape.InsetPosition = (float)(startPosition + (endPosition - startPosition) * v);
-                SelectedShape.TranslationX = startTranslationX + (endTranslationX - startTranslationX) * v;
-            },
-            length: 250);
     }
 
     private void IconClicked(object? sender, EventArgs e)
@@ -167,11 +114,27 @@ public partial class AppShellTabBar
         var parent = (Layout)icon.Parent!;
         var index = parent.IndexOf(icon);
 
-        NaluTabBar.GoTo(ShellItem!.Items[index]);
+        var targetSection = Item.Items[index];
+        if (targetSection == Item.CurrentItem)
+        {
+            return;
+        }
+
+        NaluTabBar.GoTo(targetSection);
     }
 
     private void SelectedButtonClicked(object? sender, EventArgs e)
     {
-        // Re-tap current tab - could scroll to top in future
+        this.AbortAnimation(SelectedJumpIn);
+        this.AbortAnimation(SelectedJumpOut);
+        var index = Item.Items.IndexOf(Item.CurrentItem);
+        AnimateSelectedShapeJump(index, 25);
+
+        var descendants = Shell.Current.CurrentPage.GetVisualTreeDescendants();
+
+        if (descendants.OfType<VirtualScroll>().FirstOrDefault() is { } virtualScroll)
+        {
+            virtualScroll.ScrollTo(0, 0, ScrollToPosition.Start);
+        }
     }
 }

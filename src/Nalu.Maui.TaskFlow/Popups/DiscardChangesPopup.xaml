@@ -1,52 +1,36 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-               xmlns:pm="clr-namespace:Nalu.Maui.TaskFlow.PopupModels"
-               xmlns:system="clr-namespace:System;assembly=System.Runtime"
-               x:Class="Nalu.Maui.TaskFlow.Popups.DiscardChangesPopup"
-               x:DataType="pm:DiscardChangesPopupModel"
-               x:TypeArguments="system:Boolean"
-               CanBeDismissedByTappingOutsideOfPopup="False">
+<?xml version="1.0" encoding="utf-8"?>
 
-    <Border StrokeShape="RoundRectangle 20"
-            StrokeThickness="0"
-            Padding="24,20"
-            Shadow="{Shadow Radius=16, Opacity=0.2}">
-        <Border.BackgroundColor>
-            <AppThemeBinding Light="White" Dark="#1A1A2E" />
-        </Border.BackgroundColor>
-        <VerticalStackLayout Spacing="16" WidthRequest="280">
-            <Label Text="{Binding Title}"
-                   FontFamily="OpenSansSemibold"
-                   FontSize="18">
-                <Label.TextColor>
-                    <AppThemeBinding Light="#2D3436" Dark="#ECEDEE" />
-                </Label.TextColor>
-            </Label>
-            <Label Text="{Binding Message}"
-                   FontFamily="OpenSansRegular"
-                   FontSize="14">
-                <Label.TextColor>
-                    <AppThemeBinding Light="#636E72" Dark="#A0A8B0" />
-                </Label.TextColor>
-            </Label>
-            <HorizontalStackLayout HorizontalOptions="End" Spacing="12">
-                <Button Text="Keep Editing"
-                        BackgroundColor="#E9ECEF"
-                        TextColor="#2D3436"
-                        FontFamily="OpenSansSemibold"
-                        CornerRadius="10"
-                        Padding="16,10"
-                        Clicked="KeepEditingClicked" />
-                <Button Text="Discard"
-                        BackgroundColor="#E17055"
-                        TextColor="White"
-                        FontFamily="OpenSansSemibold"
-                        CornerRadius="10"
-                        Padding="16,10"
-                        Clicked="DiscardClicked" />
-            </HorizontalStackLayout>
-        </VerticalStackLayout>
-    </Border>
-</toolkit:Popup>
+<nlayouts:PopupPageBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                        xmlns:pm="clr-namespace:Nalu.Maui.TaskFlow.PopupModels"
+                        xmlns:nlayouts="https://nalu-development.github.com/nalu/layouts"
+                        x:Class="Nalu.Maui.TaskFlow.Popups.DiscardChangesPopup"
+                        x:DataType="pm:DiscardChangesPopupModel"
+                        CloseOnScrimTapped="False">
+    <VerticalStackLayout Spacing="16" WidthRequest="280" Padding="24,16">
+        <Label Text="{Binding Title}"
+               FontFamily="OpenSansSemibold"
+               FontSize="18">
+        </Label>
+        <Label Text="{Binding Message}"
+               FontFamily="OpenSansRegular"
+               FontSize="14">
+        </Label>
+        <HorizontalStackLayout HorizontalOptions="End" Spacing="12">
+            <Button Text="Keep Editing"
+                    BackgroundColor="#E9ECEF"
+                    TextColor="#2D3436"
+                    FontFamily="OpenSansSemibold"
+                    CornerRadius="10"
+                    Padding="16,10"
+                    Command="{Binding KeepEditingCommand}"/>
+            <Button Text="Discard"
+                    BackgroundColor="#E17055"
+                    TextColor="White"
+                    FontFamily="OpenSansSemibold"
+                    CornerRadius="10"
+                    Padding="16,10"
+                    Command="{Binding DiscardChangesCommand}" />
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
+</nlayouts:PopupPageBase>

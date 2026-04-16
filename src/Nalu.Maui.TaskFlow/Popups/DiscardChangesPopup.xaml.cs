@@ -9,7 +9,4 @@ public partial class DiscardChangesPopup
         BindingContext = model;
         InitializeComponent();
     }
-
-    private async void KeepEditingClicked(object? sender, EventArgs e) => await CloseAsync(false);
-    private async void DiscardClicked(object? sender, EventArgs e) => await CloseAsync(true);
 }
