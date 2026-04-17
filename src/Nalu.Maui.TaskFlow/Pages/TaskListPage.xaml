@@ -39,13 +39,11 @@
         </Grid>
     </Shell.TitleView>
 
-    <!-- VirtualScroll list -->
-    <vs:VirtualScroll ItemsSource="{Binding Adapter}"
-                      RefreshCommand="{Binding RefreshCommand}"
-                      IsRefreshEnabled="True"
-                      FadingEdgeLength="80"
+    <!-- Remove x:Name and the leak is gone -->
+    <CollectionView ItemsSource="{Binding Tasks}"
+                      x:Name="Vs"
                       BackgroundColor="Transparent">
-        <vs:VirtualScroll.ItemTemplate>
+        <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="m:TaskItem">
                 <nalu:ViewBox Padding="16,4">
                     <Border Style="{StaticResource CardStyle}" Padding="0">
@@ -123,6 +121,6 @@
                     </Border>
                 </nalu:ViewBox>
             </DataTemplate>
-        </vs:VirtualScroll.ItemTemplate>
-    </vs:VirtualScroll>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
 </ContentPage>

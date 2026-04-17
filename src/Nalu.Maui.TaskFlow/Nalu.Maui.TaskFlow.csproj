@@ -11,6 +11,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <UseMaui>true</UseMaui>
+        <ValidateXcodeVersion>false</ValidateXcodeVersion>
 
         <ApplicationTitle>TaskFlow</ApplicationTitle>
         <ApplicationId>com.nalu.maui.taskflow</ApplicationId>
