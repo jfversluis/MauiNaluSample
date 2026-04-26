@@ -81,9 +81,9 @@
                                              x:DataType="pm:TimeLogPageModel">
                             <Label Text="📋 Recent Time Entries"
                                    Style="{StaticResource SubheadingStyle}" />
-                            <CollectionView ItemsSource="{Binding RecentEntries}"
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding RecentEntries}"
                                             HeightRequest="300">
-                                <CollectionView.ItemTemplate>
+                                <BindableLayout.ItemTemplate>
                                     <DataTemplate x:DataType="m:TimeEntry">
                                         <nalu:ViewBox Padding="0,4">
                                             <Border Style="{StaticResource CardStyle}" Padding="12,10">
@@ -107,8 +107,8 @@
                                             </Border>
                                         </nalu:ViewBox>
                                     </DataTemplate>
-                                </CollectionView.ItemTemplate>
-                            </CollectionView>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
                         </VerticalStackLayout>
                     </DataTemplate>
                 </nalu:ToggleTemplate.WhenFalse>
